@@ -20,7 +20,3 @@ jobs:
         uses: gradle/gradle-build-action
         with:
           arguments: -b ci.gradle package
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Package
-          path: ./
