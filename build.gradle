@@ -3,34 +3,7 @@ plugins {
     id 'com.android.application' version '7.2.2' apply false
     id 'com.android.library' version '7.2.2' apply false
 }
-android {
-    defaultConfig {
-        ...
-        // Specify the version code, only once for each new version of your app, for your App Bundle
-        // No need to have different version codes for different APKs generated.
-        // All split APKs will share the same version code once installed via Google Play.
-        versionCode 1
-        versionName "1.0"
-        ...
-    }
 
-    // Add this block and enable/disable the parameters as follows
-    bundle {
-        density {
-            // Different APKs are generated for devices with different screen densities; true by default.
-            enableSplit true
-        }
-        abi {
-            // Different APKs are generated for devices with different CPU architectures; true by default.
-            enableSplit true
-        }
-        language {
-            // This is disabled so that the App Bundle does NOT split the APK for each language.
-            // We're gonna use the same APK for all languages.
-            enableSplit false
-        }
-    }
-}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
