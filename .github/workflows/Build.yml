@@ -19,7 +19,7 @@ jobs:
           java-version: 11
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Build project
+      - name: Build projectx
         with:
           arguments: clean build --stacktrace
       - name: Build project
