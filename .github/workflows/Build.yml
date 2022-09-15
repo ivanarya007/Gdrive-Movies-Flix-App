@@ -21,17 +21,8 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build projectx
-        uses: eskatos/gradle-command-action@v2
-        with:
-          arguments: clean build --stacktrace
+        run: ./gradlew clean build
 
-      - name: Build project
-        uses: eskatos/gradle-command-action@v2
-        with:
-          arguments: test
-
-      - name: build prod
-        run: ./gradlew testDebug --continue
         #env:
           #SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           #SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
