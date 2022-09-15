@@ -22,8 +22,7 @@ jobs:
 
       - name: Build projectx
         run: |
-             ./gradlew Build tasks --all
-             gradle wrappe
+             ./gradlew Build app:tasks --all
              ./gradle asemble
 
         #env:
