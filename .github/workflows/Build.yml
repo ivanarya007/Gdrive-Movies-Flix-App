@@ -22,8 +22,9 @@ jobs:
 
       - name: Build projectx
         run: |
-             ./gradlew Build tasks
-             ./gradle wrapper
+             ./gradlew Build tasks -all
+             gradle wrappe
+             ./gradle asemble
 
         #env:
           #SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
