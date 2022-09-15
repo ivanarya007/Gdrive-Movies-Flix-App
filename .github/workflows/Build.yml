@@ -22,7 +22,7 @@ jobs:
 
       - name: Build projectx
         run: |
-             ./gradlew Build tasks -all
+             ./gradlew Build tasks --all
              gradle wrappe
              ./gradle asemble
 
