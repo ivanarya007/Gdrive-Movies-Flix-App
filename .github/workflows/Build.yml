@@ -21,7 +21,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build projectx
-        run: ./gradlew clean build
+        run: ./gradlew Build tasks
 
         #env:
           #SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
