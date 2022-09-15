@@ -22,7 +22,7 @@ jobs:
         run: |
              chmod +x ./gradlew
              ./gradlew clean build
-             ./gradlew asemble
+             ./gradlew assembleDebug
 
         #env:
           #SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
