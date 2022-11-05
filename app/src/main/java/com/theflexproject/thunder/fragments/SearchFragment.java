@@ -1,10 +1,10 @@
 package com.theflexproject.thunder.fragments;
 
-import static com.theflexproject.thunder.MainActivity.mCtx;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +19,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.theflexproject.thunder.R;
-import com.theflexproject.thunder.adapter.MovieRecyclerAdapter;
-import com.theflexproject.thunder.adapter.MovieRecyclerAdapterLibrary;
+import com.theflexproject.thunder.adapter.MediaAdapter;
 import com.theflexproject.thunder.database.DatabaseClient;
-import com.theflexproject.thunder.model.File;
+import com.theflexproject.thunder.model.Movie;
+import com.theflexproject.thunder.model.MyMedia;
+import com.theflexproject.thunder.model.TVShowInfo.TVShow;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,22 +35,18 @@ public class SearchFragment extends BaseFragment {
     RecyclerView recyclerView;
     RecyclerView recyclerViewGenres;
     List<Integer> genreList;
-    MovieRecyclerAdapterLibrary movieRecyclerAdapterLibrary;
-    List<File> newmovieList;
-    MovieRecyclerAdapter.OnItemClickListener listener;
+    MediaAdapter mediaAdapter;
+
+    List<Movie> movieList;
+    List<TVShow> tvShowsList;
+    List<MyMedia> matchesFound;
+    MediaAdapter.OnItemClickListener listener;
 
     EditText searchBox;
     Button search;
     ScrollView scrollview;
 
     public SearchFragment() {
-    }
-
-
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        return fragment;
     }
 
     @Override
@@ -107,20 +105,36 @@ public class SearchFragment extends BaseFragment {
                                                 @Override
                                                 public void run() {
                                                     Log.i(" ", "in thread");
-                                                    newmovieList = DatabaseClient
-                                                            .getInstance(mCtx)
+                                                    movieList = DatabaseClient
+                                                            .getInstance(mActivity)
                                                             .getAppDatabase()
-                                                            .fileDao()
+                                                            .movieDao()
                                                             .getSearchQuery(searchBox.getText().toString());
+                                                    tvShowsList = DatabaseClient
+                                                            .getInstance(mActivity)
+                                                            .getAppDatabase()
+                                                            .tvShowDao()
+                                                            .getSearchQuery(searchBox.getText().toString());
+
+                                                    matchesFound =new ArrayList<>();
+                                                    matchesFound.addAll(movieList);
+                                                    matchesFound.addAll(tvShowsList);
+
                                                     mActivity.runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            Log.i(" ", newmovieList.toString());
-                                                            recyclerView.setLayoutManager(new GridLayoutManager(mActivity , 3));
+                                                            DisplayMetrics displayMetrics = mActivity.getResources().getDisplayMetrics();
+                                                            float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+                                                            int noOfItems;
+                                                            if(dpWidth < 600f){noOfItems = 3;}
+                                                            else if(dpWidth < 840f){noOfItems = 6;}
+                                                            else {noOfItems = 8; }
+                                                            Log.i(" ", matchesFound.toString());
+                                                            recyclerView.setLayoutManager(new GridLayoutManager(mActivity , noOfItems));
                                                             recyclerView.setHasFixedSize(true);
-                                                            movieRecyclerAdapterLibrary = new MovieRecyclerAdapterLibrary(mActivity,newmovieList,listener);
-                                                            recyclerView.setAdapter(movieRecyclerAdapterLibrary);
-                                                            movieRecyclerAdapterLibrary.notifyDataSetChanged();
+                                                            mediaAdapter = new MediaAdapter(mActivity , matchesFound , listener);
+                                                            recyclerView.setAdapter(mediaAdapter);
+                                                            mediaAdapter.notifyDataSetChanged();
                                                         }
                                                     });
                                                 }});
@@ -152,11 +166,11 @@ public class SearchFragment extends BaseFragment {
 //                getActivity().runOnUiThread(new Runnable() {
 //                    @Override
 //                    public void run() {
-//                        Log.i(" ", newmovieList.toString());
+//                        Log.i(" ", newmediaList.toString());
 //                        recyclerViewGenres = getView().findViewById(R.id.recyclersearch);
 //                        recyclerViewGenres.setLayoutManager(new GridLayoutManager(getContext(), 2));
 //                        recyclerViewGenres.setHasFixedSize(true);
-//                        movieRecyclerAdapterLibrary = new MovieRecyclerAdapterLibrary(getContext(),newmovieList,listener);
+//                        movieRecyclerAdapterLibrary = new MovieRecyclerAdapterLibrary(getContext(),newmediaList,listener);
 //                        recyclerViewGenres.setAdapter(movieRecyclerAdapterLibrary);
 //                        movieRecyclerAdapterLibrary.notifyDataSetChanged();
 //                    }
@@ -166,12 +180,20 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void setOnClickListner() {
-        listener = new MovieRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment(newmovieList.get(position).getName());
-                mActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container,movieDetailsFragment).addToBackStack(null).commit();
+        listener = (view , position) -> {
+            if(matchesFound.get(position) instanceof Movie){
+                MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment(((Movie)matchesFound.get(position)).getId());
+                mActivity.getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in,R.anim.fade_out,R.anim.fade_in,R.anim.fade_out)
+                        .replace(R.id.container,movieDetailsFragment).addToBackStack(null).commit();
             }
+            if(matchesFound.get(position) instanceof TVShow){
+                TvShowDetailsFragment tvShowDetailsFragment = new TvShowDetailsFragment(((TVShow)matchesFound.get(position)).getId());
+                mActivity.getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in,R.anim.fade_out,R.anim.fade_in,R.anim.fade_out)
+                        .replace(R.id.container,tvShowDetailsFragment).addToBackStack(null).commit();
+            }
+
         };
     }
 }

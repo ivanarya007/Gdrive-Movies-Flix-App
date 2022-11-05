@@ -1,104 +1,238 @@
 package com.theflexproject.thunder.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.theflexproject.thunder.MainActivity;
+import com.google.android.material.tabs.TabLayout;
 import com.theflexproject.thunder.R;
-import com.theflexproject.thunder.adapter.MovieRecyclerAdapter;
-import com.theflexproject.thunder.adapter.MovieRecyclerAdapterLibrary;
-import com.theflexproject.thunder.database.DatabaseClient;
-import com.theflexproject.thunder.model.File;
-
-import java.util.List;
+import com.theflexproject.thunder.adapter.FragmentViewPagerAdapter;
 
 public class LibraryFragment extends BaseFragment {
 
-    RecyclerView recyclerView;
-    MovieRecyclerAdapterLibrary movieRecyclerAdapterLibrary;
-    List<File> newmovieList;
-    MovieRecyclerAdapter.OnItemClickListener listener;
-    public static Context context;
+
+
+
+    AutoCompleteTextView autoCompleteTextView;
+    String[] sort_methods;
+    ArrayAdapter<String> arrayAdapter;
+
+    TabLayout tabLayout ;
+    ViewPager2 viewPagerLibrary;
+    FragmentViewPagerAdapter fragmentViewPagerAdapter;
 
     public LibraryFragment() {
         // Required empty public constructor
     }
 
-    public static LibraryFragment newInstance(String param1, String param2) {
-
-        return new LibraryFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_library, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_library, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        showLibrary();
-
-    }
-
-    void showLibrary(){
-
-        setOnClickListner();
-
-        Thread thread = new Thread(new Runnable() {
+        initWidgets();
+        tabLayout = mActivity.findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText("Movies"));
+        tabLayout.addTab(tabLayout.newTab().setText("TV Shows"));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void run() {
-                Log.i(" ", "in thread");
-                newmovieList = DatabaseClient
-                        .getInstance(MainActivity.mCtx)
-                        .getAppDatabase()
-                        .fileDao()
-                        .getAll();
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.i(" ", newmovieList.toString());
-                        recyclerView = mActivity.findViewById(R.id.recyclerLibrary);
-                        recyclerView.setLayoutManager(new GridLayoutManager(context, 3));
-                        recyclerView.setHasFixedSize(true);
-                        movieRecyclerAdapterLibrary = new MovieRecyclerAdapterLibrary(getContext(),newmovieList,listener);
-                        recyclerView.setAdapter(movieRecyclerAdapterLibrary);
-                        movieRecyclerAdapterLibrary.notifyDataSetChanged();
-                    }
-                });
-            }});
-        thread.start();
-
-    }
-
-    private void setOnClickListner() {
-        listener = new MovieRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment(newmovieList.get(position).getName());
-                mActivity.getSupportFragmentManager().beginTransaction().replace(R.id.container,movieDetailsFragment).addToBackStack(null).commit();
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPagerLibrary.setCurrentItem(tab.getPosition());
             }
-        };
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        viewPagerLibrary.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+
+    }
+
+    private void initWidgets() {
+
+//        sort_methods = mActivity.getResources().getStringArray(R.array.sort_methods);
+//        arrayAdapter = new ArrayAdapter<>(mActivity,R.layout.dropdown_item,sort_methods);
+//        autoCompleteTextView = mActivity.findViewById(R.id.AutoCompleteTextview);
+//        autoCompleteTextView.setAdapter(arrayAdapter);
+
+        tabLayout = mActivity.findViewById(R.id.tabLayout);
+        viewPagerLibrary = mActivity.findViewById(R.id.viewPagerLibrary);
+        fragmentViewPagerAdapter = new FragmentViewPagerAdapter(this);
+        viewPagerLibrary.setSaveEnabled(false);
+        viewPagerLibrary.setAdapter(fragmentViewPagerAdapter);
+
+
     }
 
 
+
+
+
+
+
+//
+//        Thread threadmediaList = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                        String methodChosen = autoCompleteTextView.getText().toString();
+////                        Log.i("Method",methodChosen);
+////                        switch(methodChosen){
+////                            case "FileName":
+////                                sortName();
+////                            case "ReleaseDate":
+////                                sortReleaseDate();
+////                            case "Size":
+////                                sortSize();
+////                            case "TimeModified":
+////                                sortTimeModified();
+////                            case "IndexLink":
+////                                sortIndexLink();
+////                            case "Title":
+////                                sortTitle();
+////                        }
+////
+////                        Toast.makeText(mActivity.getApplicationContext(), "" + autoCompleteTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//            }
+//        });
+//        threadmediaList.setPriority(10);
+//        threadmediaList.start();
+
+//    void sortName(){
+//        setOnClickListner(); /**set this every time*/
+//        Executors.newSingleThreadExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                String methodChosen = autoCompleteTextView.getText().toString().trim();
+//                Log.i("Method",methodChosen);
+//                newmediaList = DatabaseClient
+//                        .getInstance(mActivity)
+//                        .getAppDatabase()
+//                        .fileDao()
+//                        .sortByFileName();
+//                showRecycler(newmediaList);
+//            }
+//        });
+//
+//
+//    }
+
+//    void sortReleaseDate(){
+//        Executors.newSingleThreadExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                String methodChosen = autoCompleteTextView.getText().toString().trim();
+//                Log.i("inside sort function",methodChosen);
+//                newmediaList = DatabaseClient
+//                        .getInstance(mActivity)
+//                        .getAppDatabase()
+//                        .fileDao()
+//                        .sortByRelease();
+//                Log.i("inside sort function",newmediaList.toString());
+//                showRecycler(newmediaList);
+//            }
+//        });
+//
+//    }
+
+//    void sortSize(){
+//        Executors.newSingleThreadExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                String methodChosen = autoCompleteTextView.getText().toString().trim();
+//                Log.i("Method",methodChosen);
+//                newmediaList = DatabaseClient
+//                                .getInstance(mActivity)
+//                                .getAppDatabase()
+//                                .fileDao()
+//                                .sortBySize();
+////                showRecycler(newmediaList);
+//            }
+//        });
+//
+//    }
+//
+//    void sortIndexLink() {
+//        Executors.newSingleThreadExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                String methodChosen = autoCompleteTextView.getText().toString().trim();
+//                Log.i("Method",methodChosen);
+//                newmediaList = DatabaseClient
+//                        .getInstance(mActivity)
+//                        .getAppDatabase()
+//                        .fileDao()
+//                        .sortByIndex();
+////                showRecycler(newmediaList);
+//            }
+//        });
+//
+//
+//    }
+//
+//    void sortTimeModified(){
+//        Executors.newSingleThreadExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                String methodChosen = autoCompleteTextView.getText().toString();
+//                Log.i("Method",methodChosen);
+//                newmediaList = DatabaseClient
+//                        .getInstance(mActivity)
+//                        .getAppDatabase()
+//                        .fileDao()
+//                        .sortByTime();
+////                showRecycler(newmediaList);
+//            }
+//        });
+//
+//    }
+//
+//    void sortTitle(){
+//        Executors.newSingleThreadExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                String methodChosen = autoCompleteTextView.getText().toString().trim();
+//                Log.i("Method",methodChosen);
+//                newmediaList = DatabaseClient
+//                        .getInstance(mActivity)
+//                        .getAppDatabase()
+//                        .fileDao()
+//                        .sortByTitle();
+////                showRecycler(newmediaList);
+//            }
+//        });
+//
+//    }
 }
