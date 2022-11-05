@@ -14,6 +14,9 @@ on:
     types: [opened, closed, reopened]
   issues:
     types: [opened, pinned, closed, reopened]
+  label:
+    types: [created, edited, deleted]
+
 jobs:
   notify:
     runs-on: ubuntu-latest
