@@ -3,6 +3,7 @@ name: Notify on Telegram
 on:
   fork:
   push:
+  issue_comment:
   release:
     types: [published, unpublished, created, edited, deleted, prereleased, released]
   issue_comment:
@@ -16,8 +17,6 @@ on:
   issues:
     types: [opened, pinned, closed, reopened]
   label:
-    types: [created, edited, deleted]
-  issue_comment:
     types: [created, edited, deleted]
 
 jobs:
