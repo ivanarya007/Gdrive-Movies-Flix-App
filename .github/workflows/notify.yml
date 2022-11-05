@@ -17,6 +17,8 @@ on:
     types: [opened, pinned, closed, reopened]
   label:
     types: [created, edited, deleted]
+  issue_comment:
+    types: [created, edited, deleted]
 
 jobs:
   notify:
