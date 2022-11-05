@@ -4,6 +4,7 @@ on:
   fork:
   push:
   release:
+    types: [published, unpublished, created, edited, deleted, prereleased, released]
   issue_comment:
     types: created
   watch:
