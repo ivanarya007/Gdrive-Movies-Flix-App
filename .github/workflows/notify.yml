@@ -3,11 +3,10 @@ name: Notify on Telegram
 on:
   fork:
   push:
-  issue_comment:
   release:
     types: [published, unpublished, created, edited, deleted, prereleased, released]
   issue_comment:
-    types: created
+    types: [created, edited, deleted]
   watch:
     types: started
   pull_request_review_comment:
