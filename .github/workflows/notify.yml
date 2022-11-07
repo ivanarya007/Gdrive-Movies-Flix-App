@@ -23,8 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Notify the commit on Telegram.
-        uses: EverythingSuckz/github-telegram-notify@main
+      - name: Github Telegram Notifier - Topics
+        uses: dishapatel010/github-telegram-notify@V1.1.2
         with:
           bot_token: '${{ secrets.BOT_TOKEN }}'
           chat_id: '${{ secrets.CHAT_ID }}'
+          thread_id: '${{ secrets.THREAD_ID }}'
