@@ -1,7 +1,8 @@
 name: Thunder Build Apk
 
-on: workflow_dispatch
-inputs:
+on:
+  workflow_dispatch:
+    inputs:
   checkoutrepo:
     description: "default repository anujd64/Thunder"
     required: true
