@@ -25,9 +25,6 @@ jobs:
         run: |
           tag="$(git rev-parse --short HEAD)_$(date +%s)"
           echo "::set-output name=tag::$tag"
-          commit_id=$(git ls-remote --symref https://github.com/anujd64/Thunder --verify HEAD)
-          bodyx="#Changelog\n\n> https://github.com/anujd64/Thunder/commit/$commit_id"
-          echo -e $bodyx > bodyx.txt
         shell: bash
 
       - name: Create release
@@ -38,7 +35,6 @@ jobs:
         with:
           tag_name: build-${{ steps.tag.outputs.tag }}
           release_name: Build ${{ steps.tag.outputs.tag }}
-          body_path: "bodyx.txt"
 
       - name: Upload unsigned release APK
         uses: actions/upload-release-asset@v1
@@ -49,9 +45,6 @@ jobs:
           asset_path: ./app/build/outputs/apk/release/app-release-unsigned.apk
           asset_name: app-release-unsigned.apk
           asset_content_type: application/apk
-      - name: Send unsigned release APK
-        run: |
-          curl -F document=@"./app/build/outputs/apk/release/app-release-unsigned.apk" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=unsigned
 
       - name: Upload release bundle
         uses: actions/upload-release-asset@v1
@@ -62,9 +55,6 @@ jobs:
           asset_path: ./app/build/outputs/bundle/release/app-release.aab
           asset_name: app-release.aab
           asset_content_type: application/aab
-      - name: Send release bundle
-        run: |
-          curl -F document=@"./app/build/outputs/bundle/release/app-release.aab" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=bundle
 
       - name: Fetch public keystore
         run: wget https://github.com/dishapatel010/Thunder/raw/Z/keystore.jks
@@ -87,4 +77,4 @@ jobs:
           asset_content_type: application/apk
       - name: Send signed release APK
         run: |
-          curl -F document=@"./app/build/outputs/apk/release/app-release.apk" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=signed
+          curl -F document=@"./app/build/outputs/apk/release/app-release.apk" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=signed+release+APK
