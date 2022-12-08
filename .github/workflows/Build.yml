@@ -1,13 +1,12 @@
 name: Thunder Build Apk
 
-on: workflow_dispatch
-
-inputs:
-  checkoutrepo:
-    description: "default repository anujd64/Thunder"
-    required: true
-    default: "anujd64/Thunder"
-
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "default repository anujd64/Thunder"
+        required: true
+        default: "anujd64/Thunder"
 jobs:
   Gradle:
     runs-on: ubuntu-latest
