@@ -6,6 +6,12 @@ jobs:
   Gradle:
     runs-on: windows-latest
     steps:
+    - name: Decode Keystore
+      id: decode_keystore
+      uses: timheuer/base64-to-file@v1
+      with:
+        fileName: 'keystore/my-release-key.keystore'
+        encodedString: ${{ secrets.KEYSTORE }}
     - name: checkout code
       uses: actions/checkout@v2
     - name: setup jdk
@@ -24,6 +30,10 @@ jobs:
       run: chmod +x ./gradlew
     - name: Build Release APK
       run: ./gradlew assembleRelease
+      env:
+        SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+        SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
     - name: Upload APK artifact
       uses: actions/upload-artifact@v3
       with:
