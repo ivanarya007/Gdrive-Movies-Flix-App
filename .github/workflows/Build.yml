@@ -5,8 +5,13 @@ on:
     inputs:
       version:
         description: "default repository anujd64/Thunder"
-        required: true
+        required: false
         default: "anujd64/Thunder"
+      ref:
+        description: "branch default main"
+        required: false
+        default: "main"
+
 jobs:
   Gradle:
     runs-on: ubuntu-latest
