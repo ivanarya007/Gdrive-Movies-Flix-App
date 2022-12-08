@@ -1,4 +1,4 @@
-name: Thunder ⚡ Build Apk
+name: Thunder Build Apk
 
 on: workflow_dispatch
 
@@ -6,7 +6,10 @@ jobs:
   Gradle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Thunder ⚡
+        uses: actions/checkout@master
+        with:
+          repository: anujd64/Thunder
 
       - name: LF gradlew line endings
         run: sed -i 's/\r$//' gradlew
