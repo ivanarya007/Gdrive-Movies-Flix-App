@@ -26,7 +26,7 @@ jobs:
           tag="$(git rev-parse --short HEAD)_$(date +%s)"
           echo "::set-output name=tag::$tag"
           commit_id=$(git ls-remote https://github.com/anujd64/Thunder.git HEAD | awk '{ print $1}')
-          bodyx="#Changelog\n\n> https://github.com/anujd64/Thunder/commit/$commit_id"
+          bodyx="# Changelog\n\n> https://github.com/anujd64/Thunder/commit/$commit_id"
           echo -e $bodyx > bodyx.txt
         shell: bash
 
