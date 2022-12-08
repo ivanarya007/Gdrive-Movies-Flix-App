@@ -1,15 +1,19 @@
 name: Thunder Build Apk
 
 on: workflow_dispatch
-
+inputs:
+  checkoutrepo:
+     description: "default repository anujd64/Thunder"
+     required: true
+     default: "anujd64/Thunder"
 jobs:
   Gradle:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Thunder ⚡
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
         with:
-          repository: anujd64/Thunder
+          repository: ${{ github.event.inputs.checkoutrepo }}
 
       - name: LF gradlew line endings
         run: sed -i 's/\r$//' gradlew
@@ -42,32 +46,6 @@ jobs:
           tag_name: build-${{ steps.tag.outputs.tag }}
           release_name: Build ${{ steps.tag.outputs.tag }}
           body_path: "bodyx.txt"
-
-      - name: Upload unsigned release APK
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app/build/outputs/apk/release/app-release-unsigned.apk
-          asset_name: app-release-unsigned.apk
-          asset_content_type: application/apk
-      - name: Send unsigned release APK
-        run: |
-          curl -F document=@"./app/build/outputs/apk/release/app-release-unsigned.apk" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=unsigned
-
-      - name: Upload release bundle
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app/build/outputs/bundle/release/app-release.aab
-          asset_name: app-release.aab
-          asset_content_type: application/aab
-      - name: Send release bundle
-        run: |
-          curl -F document=@"./app/build/outputs/bundle/release/app-release.aab" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=bundle
 
       - name: Fetch public keystore
         run: wget https://github.com/dishapatel010/Thunder/raw/Z/keystore.jks
