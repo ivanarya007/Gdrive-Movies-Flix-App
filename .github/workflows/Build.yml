@@ -1,12 +1,20 @@
-name: Thunder ⚡ Build Apk
+name: Thunder Build Apk
 
-on: workflow_dispatch
-
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "default repository anujd64/Thunder"
+        required: true
+        default: "anujd64/Thunder"
 jobs:
   Gradle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Thunder ⚡
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.inputs.checkoutrepo }}
 
       - name: LF gradlew line endings
         run: sed -i 's/\r$//' gradlew
