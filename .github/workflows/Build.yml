@@ -24,8 +24,8 @@ jobs:
       run: chmod +x ./gradlew
     - name: Build Release APK
       run: ./gradlew assembleRelease
-    - name: Releasing using Hub
-      uses: r0user/release-apk@main
-      env:
-       GITHUB_TOKEN: ${{ secrets.GITUB_TOKEN }}
-       APP_FOLDER: app
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: dsc-app-debug
+        path: app\build\outputs\apk\release
