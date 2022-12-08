@@ -10,7 +10,7 @@ jobs:
       id: decode_keystore
       uses: timheuer/base64-to-file@v1
       with:
-        fileName: 'keystore/my-release-key.keystore'
+        fileName: 'keystore/release.keystore'
         encodedString: ${{ secrets.KEYSTORE }}
     - name: checkout code
       uses: actions/checkout@v2
