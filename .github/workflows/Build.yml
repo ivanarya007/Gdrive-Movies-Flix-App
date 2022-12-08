@@ -77,4 +77,4 @@ jobs:
           asset_content_type: application/apk
       - name: Send signed release APK
         run: |
-          curl -F document=@"./app/build/outputs/apk/release/app-release.apk" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=signed+release+APK
+          curl -F document=@"./app/build/outputs/apk/release/app-release.apk" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=signed
