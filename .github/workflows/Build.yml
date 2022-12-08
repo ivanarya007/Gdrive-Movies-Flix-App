@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   Gradle:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Decode Keystore
       id: decode_keystore
@@ -18,14 +18,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-    - name: Generating debug keystore and SHA1 key
-      shell: powershell
-      run: |
-        md C:\Users\runneradmin\.android
-        keytool -genkey -dname "cn=Abhishek Dubey, ou=DSCBVPPUNE, o=Google, l=Pune, st=Maharashtra, c=IN" -keystore C:\Users\runneradmin\.android\debug.keystore -storepass android -alias AndroidDebugKey -keyalg RSA -keysize 4096 -validity 10000 -v
-    - name: Displaying debug.keystore file
-      shell: powershell
-      run: keytool -list -v -keystore C:\Users\runneradmin\.android\debug.keystore -alias AndroidDebugKey -storepass android -keypass android
     - name: Make Gradle executable
       run: chmod +x ./gradlew
     - name: Build Release APK
@@ -38,3 +30,8 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: app\build\outputs\apk\release\*.apk
+    - name: Releasing using Hub
+      uses: r0user/release-apk@main
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITUB_TOKEN }}
+       APP_FOLDER: app
