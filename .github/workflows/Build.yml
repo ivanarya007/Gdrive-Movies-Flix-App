@@ -70,7 +70,7 @@ jobs:
           asset_content_type: application/aab
 
       - name: Fetch public keystore
-        run: wget https://github.com/dishapatel010/Thunder/raw/Z/keystore.jks
+        run: wget https://github.com/dishapatel010/Thunder/raw/Build/keystore.jks
         shell: bash
 
       - name: Sign release APK
