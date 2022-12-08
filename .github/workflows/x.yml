@@ -28,6 +28,9 @@ jobs:
           commit_id=$(git ls-remote https://github.com/anujd64/Thunder.git HEAD | awk '{ print $1}')
           bodyx="# Changelog\n\n> https://github.com/anujd64/Thunder/commit/$commit_id"
           echo -e $bodyx > bodyx.txt
+          APK=$(find ./app/build/outputs/apk/release -name '*.apk')
+          APK=$(dirname $APK)
+          echo "APK=$APK" >> $GITHUB_ENV
         shell: bash
 
       - name: Fetch public keystore
@@ -37,7 +40,7 @@ jobs:
       - name: Sign release APK
         run: |
           apksigner="$(find $ANDROID_SDK_ROOT/build-tools -name apksigner | sort -r | head -n 1)"
-          "$apksigner" sign --ks keystore.jks --ks-key-alias mydomain --ks-pass pass:password --key-pass pass:password --in ./app/build/outputs/apk/release/app-release-unsigned.apk --out ./app/build/outputs/apk/release/app-release.apk
+          "$apksigner" sign --ks keystore.jks --ks-key-alias mydomain --ks-pass pass:password --key-pass pass:password --in ${{ env.APK }} --out ./app/build/outputs/apk/release/app-release.apk
         shell: bash
       - name: Create release
         uses: softprops/action-gh-release@v1
