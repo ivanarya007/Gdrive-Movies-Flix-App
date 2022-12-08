@@ -25,6 +25,9 @@ jobs:
         run: |
           tag="$(git rev-parse --short HEAD)_$(date +%s)"
           echo "::set-output name=tag::$tag"
+          commit_id=$(git ls-remote --symref https://github.com/anujd64/Thunder --verify HEAD)
+          bodyx="#Changelog\n\n> https://github.com/anujd64/Thunder/commit/$commit_id"
+          echo -e $bodyx > bodyx.txt
         shell: bash
 
       - name: Create release
@@ -35,6 +38,7 @@ jobs:
         with:
           tag_name: build-${{ steps.tag.outputs.tag }}
           release_name: Build ${{ steps.tag.outputs.tag }}
+          body_path: "bodyx.txt"
 
       - name: Upload unsigned release APK
         uses: actions/upload-release-asset@v1
