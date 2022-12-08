@@ -61,7 +61,7 @@ jobs:
           asset_name: app-release.aab
           asset_content_type: application/aab
       - name: Fetch public keystore
-        run: wget https://github.com/dishapatel010/Thunder-Build-Action/raw/main/.github/workflows/KEYSTORE/keystore.jks
+        run: wget https://github.com/dishapatel010/Thunder/raw/Build/keystore.jks
         shell: bash
       - name: Sign release APK
         run: |
