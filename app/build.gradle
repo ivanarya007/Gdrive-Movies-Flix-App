@@ -67,12 +67,6 @@ android {
     lintOptions { 
     checkReleaseBuilds false
 }
-applicationVariants.all { variant ->
-        variant.outputs.all {
-            def versionName = variant.versionName
-            outputFileName = versionName + '.apk'
-        }
-    }
 }
 
 
