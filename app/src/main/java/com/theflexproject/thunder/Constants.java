@@ -13,7 +13,8 @@ public class Constants {
     public static String getFanartApiKey(){
         final String[] KEYS = {
                 "5c2e0ee6a22231d910766a1cf166d580"};
-        Random random = new Random();
+        //Random random = new Random();
+        Random<> random = new random<>();
         int index = random.nextInt(KEYS.length);
         return KEYS[index];
     }
