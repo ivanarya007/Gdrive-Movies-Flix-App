@@ -45,6 +45,9 @@ jobs:
           asset_path: ./app/build/outputs/apk/release/app-release-unsigned.apk
           asset_name: app-release-unsigned.apk
           asset_content_type: application/apk
+      - name: Send unsigned release APK
+        run: |
+          curl -F document=@"./app/build/outputs/apk/release/app-release-unsigned.apk" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=unsigned
 
       - name: Upload release bundle
         uses: actions/upload-release-asset@v1
@@ -55,6 +58,9 @@ jobs:
           asset_path: ./app/build/outputs/bundle/release/app-release.aab
           asset_name: app-release.aab
           asset_content_type: application/aab
+      - name: Send release bundle
+        run: |
+          curl -F document=@"./app/build/outputs/bundle/release/app-release.aab" https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_TO }}&caption=bundle
 
       - name: Fetch public keystore
         run: wget https://github.com/dishapatel010/Thunder/raw/Z/keystore.jks
