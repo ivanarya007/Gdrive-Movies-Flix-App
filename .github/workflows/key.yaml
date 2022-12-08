@@ -7,7 +7,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: dishapatel010/android-public-build@main
+      - name: Thunder ⚡ Build Apk
+        uses: actions/checkout@v3
+        uses: dishapatel010/android-public-build@v1.1
         with:
-            token: ${{ secrets.GITUB_TOKEN }}
+          token: ${{ secrets.GITUB_TOKEN }}
