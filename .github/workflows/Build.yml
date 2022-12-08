@@ -26,6 +26,13 @@ jobs:
         SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
         SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+    - name: Build Signed APK
+      uses: victorbnl/build-signed-apk@main
+      with:
+        keystore_b64: ${{ secrets.KEYSTORE }}
+        keystore_password: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        key_alias: ${{ secrets.SIGNING_KEY_ALIAS }}
+        key_password: ${{ secrets.SIGNING_KEY_PASSWORD }}
     - name: Upload APK artifact
       uses: actions/upload-artifact@v3
       with:
